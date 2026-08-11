@@ -31,13 +31,7 @@ export function InventoryFormModal({ isOpen, onClose, onSave, placaToEdit }: Inv
           nombre: '',
           material: '',
           lote: '',
-          largo: '',
-          ancho: '',
-          grosor: '',
-          metros_cuadrados_iniciales: '',
-          metros_cuadrados_sobrantes: '',
-          ubicacion: '',
-          precio_m2: ''
+          ubicacion: ''
         })
         setPreviewUrl(null)
       }
