@@ -210,6 +210,13 @@ export default function HerramientasPage() {
                     <div className="flex items-center gap-2">
                       <Button 
                         variant="ghost" 
+                        className="h-9 w-9 p-0 text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 rounded-full"
+                        onClick={() => { setToolToEdit(tool); setIsFormModalOpen(true); }}
+                      >
+                        <Edit2 size={16} />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
                         className="h-9 w-9 p-0 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-full"
                         onClick={() => openDeleteConfirm([tool.id])}
                       >
