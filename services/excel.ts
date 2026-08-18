@@ -1,5 +1,5 @@
 import * as XLSX from 'xlsx'
-import { Placa, Herramienta } from '@/types'
+import { Placa, Herramienta, calcularM2Total } from '@/types'
 
 export function exportarPlacasAExcel(placas: Placa[]) {
   const worksheet = XLSX.utils.json_to_sheet(placas.map(p => ({
@@ -9,9 +9,10 @@ export function exportarPlacasAExcel(placas: Placa[]) {
     lote: p.lote || '',
     largo: p.largo,
     ancho: p.ancho,
-    grosor: p.grosor,
-    metros_cuadrados_iniciales: p.metros_cuadrados_iniciales,
-    metros_cuadrados_sobrantes: p.metros_cuadrados_sobrantes,
+    grosor: p.grosor ?? '',
+    cantidad_placas: p.cantidad_placas,
+    m2_total: calcularM2Total(p),
+    medidas_individuales: p.medidas_individuales ? JSON.stringify(p.medidas_individuales) : '',
     ubicacion: p.ubicacion || '',
     precio_m2: p.precio_m2 || ''
   })))
@@ -46,6 +47,7 @@ export function importarPlacasDesdeExcel(file: File): Promise<Partial<Placa>[]> 
           const keyLargo = findKey(['largo', 'largo_m', 'longitud']) || 'largo';
           const keyAncho = findKey(['ancho', 'ancho_m', 'anchura']) || 'ancho';
           const keyGrosor = findKey(['grosor', 'espesor']) || 'grosor';
+          const keyCantidad = findKey(['cantidad_placas', 'cantidad', 'placas', 'stock']) || 'cantidad_placas';
           
           return {
             id: row.id || undefined, // undefined for new records
@@ -54,9 +56,9 @@ export function importarPlacasDesdeExcel(file: File): Promise<Partial<Placa>[]> 
             lote: row.lote?.toString() || null,
             largo: Number(row[keyLargo]) || 0,
             ancho: Number(row[keyAncho]) || 0,
-            grosor: Number(row[keyGrosor]) || 0,
-            metros_cuadrados_iniciales: Number(row.metros_cuadrados_iniciales) || 0,
-            metros_cuadrados_sobrantes: Number(row.metros_cuadrados_sobrantes) || 0,
+            grosor: row[keyGrosor] ? Number(row[keyGrosor]) : null,
+            cantidad_placas: Math.floor(Number(row[keyCantidad])) || 0,
+            medidas_individuales: row.medidas_individuales ? (typeof row.medidas_individuales === 'string' ? JSON.parse(row.medidas_individuales) : row.medidas_individuales) : null,
             ubicacion: row.ubicacion?.toString() || null,
             precio_m2: row[keyPrecio] ? Number(row[keyPrecio]) : null
           }

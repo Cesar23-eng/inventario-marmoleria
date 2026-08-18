@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { getPlacas, upsertPlaca, deletePlacas } from '@/services/placas'
-import { Placa } from '@/types'
+import { Placa, MedidaIndividual, calcularM2Total } from '@/types'
 import { Button } from '@/components/ui/Button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table'
 import { InventoryFormModal } from '@/components/InventoryFormModal'
@@ -64,8 +64,12 @@ export default function PlacasPage() {
     await fetchPlacas()
   }
 
-  const handleUpdateStock = async (id: string, newStock: number) => {
-    await upsertPlaca({ id, metros_cuadrados_sobrantes: newStock })
+  const handleUpdateStock = async (id: string, newStock: number, medidas?: MedidaIndividual[] | null) => {
+    const updateData: Partial<Placa> = { id, cantidad_placas: newStock }
+    if (medidas !== undefined) {
+      updateData.medidas_individuales = medidas
+    }
+    await upsertPlaca(updateData)
     await fetchPlacas()
   }
 
@@ -200,9 +204,12 @@ export default function PlacasPage() {
                     <div>
                       <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1">Stock Actual</p>
                       <div className="flex items-center gap-2">
-                        <div className={`w-2.5 h-2.5 rounded-full ${placa.metros_cuadrados_sobrantes > 0 ? 'bg-emerald-500' : 'bg-red-500'}`}></div>
-                        <span className="font-bold text-zinc-800 text-xl">{placa.metros_cuadrados_sobrantes} <span className="text-sm font-medium text-zinc-500">m²</span></span>
+                        <div className={`w-2.5 h-2.5 rounded-full ${placa.cantidad_placas > 0 ? 'bg-emerald-500' : 'bg-red-500'}`}></div>
+                        <span className="font-bold text-zinc-800 text-xl">{placa.cantidad_placas} <span className="text-sm font-medium text-zinc-500">placas</span></span>
                       </div>
+                      {calcularM2Total(placa) > 0 && (
+                        <p className="text-xs text-zinc-400 mt-0.5">{calcularM2Total(placa)} m²</p>
+                      )}
                     </div>
                     
                     <div className="flex items-center gap-2">
@@ -242,7 +249,7 @@ export default function PlacasPage() {
                   <TableHead>Nombre / Material</TableHead>
                   <TableHead>Precio</TableHead>
                   <TableHead>Dimensiones</TableHead>
-                  <TableHead>M² Disp.</TableHead>
+                  <TableHead>Stock (Placas)</TableHead>
                   <TableHead className="text-right">Acciones</TableHead>
                 </TableRow>
               </TableHeader>
@@ -272,16 +279,23 @@ export default function PlacasPage() {
                     </TableCell>
                     <TableCell>
                       <span className="text-zinc-600 text-sm">
-                        {(!placa.largo || placa.largo === 0) && (!placa.ancho || placa.ancho === 0) 
-                          ? <span className="text-zinc-400 italic">Sin definir</span>
-                          : `${placa.largo}m × ${placa.ancho}m`
+                        {placa.medidas_individuales && placa.medidas_individuales.length > 0
+                          ? <span className="text-amber-600 font-medium">Mixtas <span className="text-zinc-400 font-normal">({placa.medidas_individuales.length})</span></span>
+                          : (!placa.largo || placa.largo === 0) && (!placa.ancho || placa.ancho === 0) 
+                            ? <span className="text-zinc-400 italic">Sin definir</span>
+                            : `${placa.largo}m × ${placa.ancho}m`
                         }
                       </span>
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-2">
-                        <div className={`w-2 h-2 rounded-full ${placa.metros_cuadrados_sobrantes > 0 ? 'bg-emerald-500' : 'bg-red-500'}`}></div>
-                        <span className="font-bold text-zinc-700">{placa.metros_cuadrados_sobrantes} m²</span>
+                      <div className="flex flex-col">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-2 h-2 rounded-full ${placa.cantidad_placas > 0 ? 'bg-emerald-500' : 'bg-red-500'}`}></div>
+                          <span className="font-bold text-zinc-700">{placa.cantidad_placas} placas</span>
+                        </div>
+                        {calcularM2Total(placa) > 0 && (
+                          <span className="text-xs text-zinc-400 ml-4">{calcularM2Total(placa)} m²</span>
+                        )}
                       </div>
                     </TableCell>
                     <TableCell className="text-right">

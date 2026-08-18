@@ -9,12 +9,14 @@ create table if not exists public.placas (
     nombre text not null,
     material text not null,
     lote text,
-    largo numeric(10, 2) not null,
-    ancho numeric(10, 2) not null,
-    grosor numeric(10, 2) not null,
-    metros_cuadrados_sobrantes numeric(10, 2) not null,
+    largo numeric(10, 2) not null default 0,
+    ancho numeric(10, 2) not null default 0,
+    grosor numeric(10, 2),
+    cantidad_placas integer not null default 0,
+    medidas_individuales jsonb,
     ubicacion text,
     precio_m2 numeric(10, 2),
+    imagen_url text,
     created_at timestamp with time zone default timezone('utc'::text, now()) not null,
     updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
