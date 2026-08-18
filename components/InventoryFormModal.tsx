@@ -168,11 +168,11 @@ export function InventoryFormModal({ isOpen, onClose, onSave, placaToEdit }: Inv
                   className="w-full rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-300 transition-all appearance-none cursor-pointer"
                 >
                   <option value="" disabled>Seleccionar material...</option>
-                  <option value="Mármol">Mármol</option>
+                  <option value="Marmol">Marmol</option>
                   <option value="Granito">Granito</option>
                   <option value="Piedra Sinterizada">Piedra Sinterizada</option>
                   <option value="Cuarzo">Cuarzo</option>
-                  <option value="Cuarzita">Cuarzita</option>
+                  <option value="Cuarcita">Cuarcita</option>
                 </select>
               </div>
               <Input 

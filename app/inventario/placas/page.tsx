@@ -115,7 +115,7 @@ export default function PlacasPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">Inventario de Placas</h1>
-          <p className="text-zinc-500 mt-1">Gestiona las placas de mármol, granito y cuarzo.</p>
+          <p className="text-zinc-500 mt-1">Gestiona las placas de marmol, granito y cuarzo.</p>
         </div>
         
         <div className="flex flex-wrap items-center gap-3">

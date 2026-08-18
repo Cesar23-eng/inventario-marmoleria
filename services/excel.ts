@@ -50,7 +50,7 @@ export function importarPlacasDesdeExcel(file: File): Promise<Partial<Placa>[]> 
           return {
             id: row.id || undefined, // undefined for new records
             nombre: row[keyNombre]?.toString() || 'Placa sin nombre',
-            material: row.material?.toString() || 'Mármol/Granito',
+            material: row.material?.toString() || 'Marmol/Granito',
             lote: row.lote?.toString() || null,
             largo: Number(row[keyLargo]) || 0,
             ancho: Number(row[keyAncho]) || 0,
