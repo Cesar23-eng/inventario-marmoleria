@@ -40,8 +40,9 @@ export function InventoryFormModal({ isOpen, onClose, onSave, placaToEdit }: Inv
     }
   }, [isOpen, placaToEdit])
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type } = e.target
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    const type = 'type' in e.target ? (e.target as HTMLInputElement).type : 'text'
     setFormData(prev => ({
       ...prev,
       [name]: type === 'number' ? (value ? Number(value) : '') : value
@@ -157,14 +158,23 @@ export function InventoryFormModal({ isOpen, onClose, onSave, placaToEdit }: Inv
                   placeholder="Ej. Marmol Carrara Supremo"
                 />
               </div>
-              <Input 
-                label="Material" 
-                name="material"
-                required 
-                value={formData.material || ''} 
-                onChange={handleChange} 
-                placeholder="Ej. Mármol"
-              />
+              <div>
+                <label className="block text-sm font-medium text-zinc-700 mb-1.5">Material</label>
+                <select
+                  name="material"
+                  required
+                  value={formData.material || ''}
+                  onChange={handleChange}
+                  className="w-full rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-zinc-800 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/10 focus:border-zinc-300 transition-all appearance-none cursor-pointer"
+                >
+                  <option value="" disabled>Seleccionar material...</option>
+                  <option value="Mármol">Mármol</option>
+                  <option value="Granito">Granito</option>
+                  <option value="Piedra Sinterizada">Piedra Sinterizada</option>
+                  <option value="Cuarzo">Cuarzo</option>
+                  <option value="Cuarzita">Cuarzita</option>
+                </select>
+              </div>
               <Input 
                 label="Lote" 
                 name="lote"
@@ -196,13 +206,7 @@ export function InventoryFormModal({ isOpen, onClose, onSave, placaToEdit }: Inv
               value={formData.grosor || ''} 
               onChange={handleChange} 
             />
-            <Input 
-              label="M² Sobrantes" 
-              name="metros_cuadrados_sobrantes"
-              type="number" step="0.01" required 
-              value={formData.metros_cuadrados_sobrantes || ''} 
-              onChange={handleChange} 
-            />
+
             <Input 
               label="Ubicación" 
               name="ubicacion"
